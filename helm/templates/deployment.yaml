@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "..fullname" . }}
+  labels:
+    app: {{ template "..fullname" . }}
+    kubernetes.io/name: {{ .Chart.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "..fullname" . }}
+      kubernetes.io/name: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "..fullname" . }}
+        kubernetes.io/name: {{ .Chart.Name }}
+    spec:
+      serviceAccountName: {{ template "..fullname" . }}
+      containers:
+      - name: python
+        image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+        command:
+          - kopf
+          - run
+          - /src/caulk.py
+          # - --namespace=javi
+          - --all-namespaces
+          - --log-format={{ .Values.logFormat }}
+        resources:
+{{- toYaml .Values.resources | indent 10 }}
+      nodeSelector:
+{{- toYaml .Values.nodeSelector | indent 8 }}
+      tolerations:
+{{- toYaml .Values.tolerations | indent 8 }}
