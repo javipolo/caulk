@@ -1,0 +1,8 @@
+image:
+  name: javipolo/caulk
+  tag: v0.1.0
+
+logFormat: full
+resources: {}
+nodeSelector: {}
+tolerations: []
